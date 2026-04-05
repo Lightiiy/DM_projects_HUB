@@ -1,2 +1,3 @@
 # DM_MaxCut
-Interactive website used for demonstration of MaxCut Problem. 
+
+Interactive website used for demonstration of MaxCut Problem.
