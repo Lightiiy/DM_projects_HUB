@@ -1,4 +1,31 @@
+@use '../../variables/styles/variables' as colors;
+
 .navbar {
-  background-color: red;
-  padding: 1rem;
+  background-color: colors.$dm-primary;
+  display: flex;
+  height: 4rem;
+  padding: 1rem 0.5rem;
+
+  &_title {
+    padding: 1rem 0.5rem;
+    margin: 0;
+    font-weight: 500;
+    color: white;
+
+    border-bottom: 2px solid white;
+    padding-bottom: 2px; // Distance between text and line
+
+    vertical-align: middle;
+    margin-left: 10px; // Space between shield and text
+  }
+
+  &_logoWrapper {
+    height: 100%;
+  }
+
+  &_logo {
+    height: 100%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+  }
 }

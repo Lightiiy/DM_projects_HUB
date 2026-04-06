@@ -1,4 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
-body {
+@use './app/variables/styles/variables' as *;
+
+body,
+p {
   margin: 0;
+}
+
+body {
+  font-family: $dm-font-main;
 }
