@@ -1,12 +1,14 @@
 import {
-  afterNextRender,
-  AfterViewInit,
   Component,
   effect,
   ElementRef,
+  EventEmitter,
+  inject,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { input } from '@angular/core';
+import { DrawingService } from './services/drawing-service';
 
 @Component({
   selector: 'dm-graph-canvas',
@@ -14,50 +16,174 @@ import { input } from '@angular/core';
   templateUrl: './graph-canvas.html',
   styleUrl: './graph-canvas.scss',
 })
-export class GraphCanvas implements AfterViewInit {
+export class GraphCanvas {
   graph = input.required<Graph>();
-  @ViewChild('graphCanvas') canvas!: ElementRef<HTMLCanvasElement>;
 
-  ngAfterViewInit() {
-    this.drawGraph();
+  @Output() cutCompleted = new EventEmitter<VisualNode[]>(); 
+
+  private graphCanvas!: HTMLCanvasElement;
+  private graphContext!: CanvasRenderingContext2D;
+
+  private drawingCanvas!: HTMLCanvasElement;
+  private drawingContext!: CanvasRenderingContext2D;
+
+  drawingService = inject(DrawingService);
+
+
+  private isDrawing = false;
+  private lassoPoints: Coordinates2D[] = [];
+
+  @ViewChild('graphCanvas') set graphHandle(ref: ElementRef<HTMLCanvasElement>) {
+    if (ref)
+    {
+      this.graphCanvas = ref.nativeElement;
+      this.graphContext = this.graphCanvas.getContext('2d')!;
+      this.trySync();
+    }
+  }
+
+  @ViewChild('drawingCanvas') set drawingHandle(ref: ElementRef<HTMLCanvasElement>) {
+    if (ref)
+    {
+      this.drawingCanvas = ref.nativeElement;
+      this.drawingContext = this.drawingCanvas.getContext('2d')!;
+      this.trySync();
+    }
+  }
+
+  constructor(){
+    effect(() => { 
+      const data = this.graph()
+      if(this.graphCanvas && data) {
+        this.drawGraph();
+      }
+    })
+  }
+
+  startDrawing(event: MouseEvent) {
+    this.isDrawing = true;
+    this.lassoPoints = [];
+
+    this.drawingContext.clearRect(0,0, this.drawingCanvas.width, this.drawingCanvas.height);
+
+    const pointer = this.getMousePosition(event);
+    this.lassoPoints.push(pointer);
+
+    this.drawingContext.beginPath();
+    this.drawingContext.moveTo(pointer.x, pointer.y);
+    this.drawingContext.strokeStyle = '#ff69b4';
+    this.drawingContext.lineWidth = 2;
+    this.drawingContext.setLineDash([5,5]);
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (!this.isDrawing) return;
+
+    const pointer = this.getMousePosition(event);
+    this.lassoPoints.push(pointer);
+
+    this.drawingContext.lineTo(pointer.x, pointer.y);
+    this.drawingContext.stroke();
+  }
+
+  stopDrawing() {
+    if (!this.isDrawing) return;
+    this.isDrawing = false;
+
+  // Visually "seal" the polygon by drawing back to the start
+    if (this.lassoPoints.length > 2) {
+      this.drawingContext.lineTo(this.lassoPoints[0].x, this.lassoPoints[0].y);
+      this.drawingContext.stroke();
+      this.drawingContext.closePath();
+    }
+
+    const nodesInside = this.graph().nodes.filter( node =>
+      this.drawingService.isPointInPolygon(node, this.lassoPoints)
+    );
+
+    if (nodesInside.length === 0) {
+      return;
+    }
+
+    this.cutCompleted.emit(nodesInside);
   }
 
   private drawGraph() {
-    const canvas = this.canvas.nativeElement;
-    if (!canvas) return;
-    const canvasContext = canvas.getContext('2d');
-    if (!canvasContext) return;
+    const data = this.graph()
 
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    this.graphCanvas.width = this.graphCanvas.offsetWidth;
+    this.graphCanvas.height = this.graphCanvas.offsetHeight;
 
-    console.log('Canvas Size:', canvas.width, canvas.height);
+    this.graphContext.clearRect(0,0, this.graphCanvas.width, this.graphCanvas.height);
 
-    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-    canvasContext.strokeStyle = '#ffffff';
-    canvasContext.lineWidth = 2;
-    this.graph().edges.forEach((edge) => {
-      const src = this.graph().nodes.find((n) => n.id === edge.sourceId);
-      const dest = this.graph().nodes.find((n) => n.id === edge.targetId);
-      if (src && dest) {
-        canvasContext.beginPath();
-        canvasContext.moveTo(src.x, src.y);
-        canvasContext.lineTo(dest.x, dest.y);
-        canvasContext.stroke();
+    this.graphContext.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    this.graphContext.lineWidth = 2;
+
+    data.edges.forEach(edge => {
+      const src = data.nodes.find(n => n.id === edge.sourceId);
+      const dest = data.nodes.find(n => n.id === edge.targetId);
+
+      if(src&&dest){
+        this.graphContext.beginPath();
+        this.graphContext.moveTo(src.x, src.y);
+        this.graphContext.lineTo(dest.x, dest.y);
+        this.graphContext.stroke();
+
+        const midX = (src.x + dest.x) / 2;
+        const midY = (src.y + dest.y) / 2;
+        this.graphContext.fillStyle = '#fcd2a0';
+        this.graphContext.font = '12px Montserrat';
+        this.graphContext.fillText(edge.weight.toString(), midX - 10, midY - 10);
       }
-    });
+    })
 
-    // 2. Draw Nodes
-    this.graph().nodes.forEach((node) => {
-      canvasContext.fillStyle = '#b02109'; // PWr Red
-      canvasContext.beginPath();
-      canvasContext.arc(node.x, node.y, 20, 0, Math.PI * 2);
-      canvasContext.fill();
+    data.nodes.forEach(node => {
+      this.graphContext.shadowBlur = 10;
+      this.graphContext.shadowColor = 'rgba(176,33,9,0.5)';
+      
+      if (node.partition === 'B') {
+        this.graphContext.fillStyle = '#00bcd4';
+        this.graphContext.strokeStyle = '#00838f';
+      } else {
+        this.graphContext.fillStyle = '#b02109';
+        this.graphContext.strokeStyle = '#7f1706';
+      }
 
-      canvasContext.fillStyle = 'white';
-      canvasContext.font = '14px Montserrat';
-      canvasContext.textAlign = 'center';
-      canvasContext.fillText(node.id, node.x, node.y + 5);
-    });
+      this.graphContext.beginPath()
+      this.graphContext.arc(node.x, node.y, 20, 0, Math.PI * 2);
+      this.graphContext.fill();
+
+      this.graphContext.shadowBlur = 0;
+
+      this.graphContext.fillStyle = 'white';
+      this.graphContext.font = 'bold 14px Monserrat';
+      this.graphContext.textAlign = 'center';
+      this.graphContext.fillText(node.id, node.x, node.y + 5);
+    })
+    
   }
+
+  private trySync() {
+    if ( this.graphCanvas && this.drawingCanvas)
+    {
+      const width = this.graphCanvas.offsetWidth;
+      const height = this.graphCanvas.offsetHeight;
+      
+      [this.graphCanvas, this.drawingCanvas].forEach(c => {
+        c.width = width;
+        c.height = height;
+      }) 
+      
+      this.drawGraph();
+    }
+  }
+
+  private getMousePosition(event: MouseEvent) {
+    const rect = this.drawingCanvas.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+  }
+
 }

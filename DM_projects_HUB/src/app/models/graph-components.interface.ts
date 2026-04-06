@@ -2,6 +2,7 @@ interface VisualNode {
   id: string;
   x: number;
   y: number;
+  partition?: 'A' | 'B';
 }
 
 interface VisualEdge {

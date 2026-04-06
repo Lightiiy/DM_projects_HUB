@@ -1,3 +1,5 @@
 <div class="maxCut">
-  <dm-graph-canvas [graph]="graph"></dm-graph-canvas>
+  <dm-graph-canvas [graph]="this.graphSignal()" (cutCompleted)="handleNewCut($event)"></dm-graph-canvas>
+  <div>{{this.cutWeightSignal()}}</div>
+  <dm-file-input></dm-file-input>
 </div>

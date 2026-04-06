@@ -1,3 +1,8 @@
 <div class="graphCanvas">
-  <canvas id="graphCanvas"></canvas>
+  <canvas #graphCanvas id="grapLayer"></canvas>
+  <canvas #drawingCanvas id="drawingLayer"
+    (mousedown)="startDrawing($event)"
+    (mousemove)="onMouseMove($event)"
+    (mouseup)="stopDrawing()"
+  ></canvas>
 </div>
