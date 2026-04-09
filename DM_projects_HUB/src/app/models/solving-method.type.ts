@@ -1,0 +1,1 @@
+export type SolverMethod = 'Greedy' | 'Kernighan-Lin';

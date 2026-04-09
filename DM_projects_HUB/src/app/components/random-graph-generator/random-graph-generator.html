@@ -1,0 +1,24 @@
+<div class="generateRandom">
+<form [formGroup]="generatorForm" class="gen-card">
+  <h2>Random Graph Parameters</h2>
+
+  <div class="field">
+    <label>Node Count (n): {{ generatorForm.value.nodeCount }}</label>
+    <input type="range" formControlName="nodeCount" min="3" max="100">
+  </div>
+
+  <div class="field">
+    <label>Edge Probability (p): {{ generatorForm.value.density | percent }}</label>
+    <input type="range" formControlName="density" min="0" max="1" step="0.01">
+  </div> 
+
+  <div class="field">
+    <label>Max Edge Weight: {{ generatorForm.value.maxWeight }}</label>
+    <input type="number" formControlName="maxWeight">
+  </div>
+
+  <div class="stats-preview">
+    <p>Max possible edges: {{ (generatorForm.value.nodeCount! * (generatorForm.value.nodeCount! - 1)) / 2 }}</p>
+  </div>
+</form>
+</div>

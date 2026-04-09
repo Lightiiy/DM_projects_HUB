@@ -1,17 +1,17 @@
-interface VisualNode {
+export interface VisualNode {
   id: string;
   x: number;
   y: number;
   partition?: 'A' | 'B';
 }
 
-interface VisualEdge {
+export interface VisualEdge {
   sourceId: string;
   targetId: string;
   weight: number;
 }
 
-interface Graph {
+export interface Graph {
   nodes: VisualNode[];
   edges: VisualEdge[];
 }

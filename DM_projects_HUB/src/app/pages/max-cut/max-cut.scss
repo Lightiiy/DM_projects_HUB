@@ -1,5 +1,20 @@
+:host{
+  height: 100%;
+}
+
 .maxCut {
   height: 100%;
   background-color: violet;
   padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+
+  &_userInputs{
+    display: flex;
+    height: 100%;
+  }
+
+  &_fileInput {
+    background-color: red;
+  }
 }

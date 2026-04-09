@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { VisualNode } from '../../../models/graph-components.interface';
+import { Coordinates2D } from '../../../models/coordinates.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +10,6 @@ export class DrawingService {
   isPointInPolygon(node: VisualNode, polygon: Coordinates2D[]): boolean {
     let isInside = false;
   
-  // 1. Optimization: Bounding Box (Skip expensive math if node is nowhere near)
     const minX = Math.min(...polygon.map(p => p.x));
     const maxX = Math.max(...polygon.map(p => p.x));
     const minY = Math.min(...polygon.map(p => p.y));
@@ -16,7 +17,6 @@ export class DrawingService {
 
     if (node.x < minX || node.x > maxX || node.y < minY || node.y > maxY) return false;
 
-  // 2. Ray Casting Math
     for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
       const xi = polygon[i].x, yi = polygon[i].y;
       const xj = polygon[j].x, yj = polygon[j].y;

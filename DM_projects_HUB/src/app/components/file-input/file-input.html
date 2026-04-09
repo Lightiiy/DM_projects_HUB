@@ -1,3 +1,10 @@
-<div class="fileInput">
-    <div> load in the file</div>
+<div class="fileInput" (dragover)="$event.preventDefault()" (drop)="onFileDrop($event)">
+  <div>load in the file</div>
+  <input 
+    id="file-upload" 
+    type="file" 
+    (change)="onFileSelected($event)" 
+    accept=".txt,.graph" 
+    hidden 
+  />
 </div>

@@ -1,8 +1,14 @@
 @use './app/variables/styles/variables' as *;
 
-body,
+body, 
+html,
 p {
   margin: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {

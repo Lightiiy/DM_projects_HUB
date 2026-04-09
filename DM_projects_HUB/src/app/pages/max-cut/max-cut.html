@@ -1,5 +1,21 @@
 <div class="maxCut">
-  <dm-graph-canvas [graph]="this.graphSignal()" (cutCompleted)="handleNewCut($event)"></dm-graph-canvas>
-  <div>{{this.cutWeightSignal()}}</div>
-  <dm-file-input></dm-file-input>
+  <dm-graph-canvas
+    [graph]="this.graphSignal()"
+    (cutCompleted)="handleNewCut($event)"
+    (cutStarted)="resetGraph()"
+  ></dm-graph-canvas>
+  <div>{{ this.cutWeightSignal() }}</div>
+  <div class="maxCut_userInputs">
+
+    <dm-file-input
+    class="maxCut_fileInput"
+    (fileLoaded)="this.handleNewGraph($event)"
+    ></dm-file-input>
+    
+    <dm-random-graph-generator (graphGenerated)="this.handleNewGraph($event)"></dm-random-graph-generator>
+
+    <dm-solver-controls [graph]="this.graphSignal()" (solveApplied)="this.handleNewGraph($event)"></dm-solver-controls>
+
+    <dm-switch-to-bipartite [graph]="this.graphSignal()" (graphUpdated)="this.handleNewGraph($event)"></dm-switch-to-bipartite>
+  </div>
 </div>

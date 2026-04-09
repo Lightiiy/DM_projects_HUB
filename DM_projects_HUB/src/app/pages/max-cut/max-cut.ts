@@ -2,18 +2,21 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { GraphCanvas } from '../../components/graph-canvas/graph-canvas';
 import { MaxCutService } from './services/max-cut-service';
 import { FileInput } from '../../components/file-input/file-input';
+import { RandomGraphGenerator } from '../../components/random-graph-generator/random-graph-generator';
+import { Graph, VisualNode } from '../../models/graph-components.interface';
+import { SolverControls } from '../../components/solver-controls/solver-controls';
+import { SwitchToBipartite } from '../../components/switch-to-bipartite/switch-to-bipartite';
 
 @Component({
   selector: 'dm-max-cut',
-  imports: [GraphCanvas, FileInput],
+  imports: [GraphCanvas, FileInput, RandomGraphGenerator, SolverControls, SwitchToBipartite],
   templateUrl: './max-cut.html',
   styleUrl: './max-cut.scss',
 })
 export class MaxCut {
-
   maxCutService = inject(MaxCutService);
 
-    graph: Graph = {
+  graph: Graph = {
     nodes: [
       { id: 'a1', x: 100, y: 100 },
       { id: 'a2', x: 300, y: 100 },
@@ -29,26 +32,45 @@ export class MaxCut {
   graphSignal = signal<Graph>(this.graph);
 
   cutWeightSignal = computed<number>(() => {
-    console.log("thoust be computing");
+    console.log('thoust be computing');
     const currentGraph = this.graphSignal();
 
     return this.maxCutService.calculateWeight(currentGraph.nodes, currentGraph.edges);
-  })
+  });
 
+  handleNewGraph(newGraph: Graph): void {
+    this.graphSignal.set(newGraph);
 
-  handleNewCut(nodesInsideLasso: VisualNode[]) {
+    console.log('thoust haveth loaded a filage');
+  }
+
+  handleNewCut(nodesInsideLasso: VisualNode[]): void {
     const currentGraph = this.graphSignal();
-    
-    const updatedNodes = currentGraph.nodes.map(node => ({
-      ...node, 
-      partition: (nodesInsideLasso.some(selected => selected.id === node.id)) ? 'B' : 'A' as 'B' | 'A'
+
+    const updatedNodes = currentGraph.nodes.map((node) => ({
+      ...node,
+      partition: nodesInsideLasso.some((selected) => selected.id === node.id)
+        ? 'B'
+        : ('A' as 'B' | 'A'),
     }));
 
     this.graphSignal.set({
       ...currentGraph,
-      nodes: updatedNodes
-    })
+      nodes: updatedNodes,
+    });
+  }
 
-    console.log(nodesInsideLasso);
+  resetGraph(): void {
+    const currentGraph = this.graphSignal();
+
+    const noPartitionGraph = currentGraph.nodes.map((node) => ({
+      ...node,
+      partition: undefined,
+    }));
+
+    this.graphSignal.set({
+      ...currentGraph,
+      nodes: noPartitionGraph,
+    });
   }
 }
