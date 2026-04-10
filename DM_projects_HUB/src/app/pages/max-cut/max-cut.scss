@@ -1,20 +1,66 @@
+@use "../../variables/styles/variables" as colors;
 :host{
   height: 100%;
+  width: 100%;
 }
 
 .maxCut {
   height: 100%;
-  background-color: violet;
-  padding: 0 1rem;
+  background-color: colors.$dm-bg-grey;
+  padding: 0  1rem;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  &_totalWeight{
+    font-size: 2rem;
+    background-color: #FFF;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  &_canvas {
+    width: 50%;
+    min-height: 500px;
+    min-width: 700px;
+    height: 75%;
+  }
+  
 
   &_userInputs{
     display: flex;
     height: 100%;
+    justify-content: space-around;
+    width: 100%;
+
+  }
+
+  &_currentGraph{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 30%;
+    justify-content: center;
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+
+  &_graphGenerator {
+    width: 50%;
   }
 
   &_fileInput {
     background-color: red;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    
+    &_canvas {
+      width: 100%;
+    }
+
+    &_userInputs {
+      justify-content: space-around;
+      width: 100%;
+    }
   }
 }

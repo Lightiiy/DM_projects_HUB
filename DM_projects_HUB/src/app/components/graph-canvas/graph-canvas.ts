@@ -74,7 +74,7 @@ export class GraphCanvas {
 
     this.drawingContext.beginPath();
     this.drawingContext.moveTo(pointer.x, pointer.y);
-    this.drawingContext.strokeStyle = '#ff69b4';
+    this.drawingContext.strokeStyle = '#e7a880';
     this.drawingContext.lineWidth = 2;
     this.drawingContext.setLineDash([5, 5]);
   }
@@ -131,7 +131,7 @@ export class GraphCanvas {
 
         this.graphContext.beginPath();
         if(isCutEdge) {
-          this.graphContext.strokeStyle = '#00e5ff'; 
+          this.graphContext.strokeStyle = '#fcd2a0'; 
           this.graphContext.lineWidth = 3;           
           this.graphContext.setLineDash([]);        
         } else {
@@ -149,7 +149,7 @@ export class GraphCanvas {
         const midX = (src.x + dest.x) / 2;
         const midY = (src.y + dest.y) / 2;
 
-        this.graphContext.fillStyle = isCutEdge ? '#00e5ff' : '#fcd2a0';
+        this.graphContext.fillStyle = isCutEdge ? '#e7a880' : '#CCCCCC';
         this.graphContext.font = '12px Montserrat';
         this.graphContext.fillText(edge.weight.toString(), midX - 10, midY - 10);
       }
@@ -160,7 +160,7 @@ export class GraphCanvas {
       this.graphContext.shadowColor = 'rgba(176,33,9,0.5)';
 
       if (node.partition === 'B') {
-        this.graphContext.fillStyle = '#00bcd4';
+        this.graphContext.fillStyle = '#fcd2a0';
         this.graphContext.strokeStyle = '#00838f';
       } else {
         this.graphContext.fillStyle = '#b02109';
