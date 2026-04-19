@@ -1,3 +1,10 @@
 .fileInput {
   height: 100%;
+
+  &_invisibleCover{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: green;
+  }
 }
