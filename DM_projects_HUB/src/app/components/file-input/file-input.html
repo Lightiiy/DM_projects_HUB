@@ -1,10 +1,26 @@
-<div class="fileInput" (dragover)="$event.preventDefault()" (drop)="onFileDrop($event)">
-  <div>load in the file</div>
-  <input 
+<div class="fileInput_invisibleCover">
+  
+</div>
+
+@if(this.isFileDragged())
+{
+
+  
+  <div class="fileInput_cover" (dragover)="$event.preventDefault()" (drop)="onFileDrop($event)">
+    <div>load in the file</div>
+    <input 
     id="file-upload" 
     type="file" 
     (change)="onFileSelected($event)" 
     accept=".txt,.graph" 
     hidden 
-  />
-</div>
+    />
+  </div>
+  
+}
+@else {
+
+  <div class="fileInput_info">
+    Drag a file over the screen to load in file data
+  </div>
+}

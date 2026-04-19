@@ -12,10 +12,10 @@
       <dm-switch-to-bipartite [graph]="this.graphSignal()" (graphUpdated)="this.handleNewGraph($event)"></dm-switch-to-bipartite>
     </div>
 
-    <!-- <dm-file-input
+    <dm-file-input
     class="maxCut_fileInput"
     (fileLoaded)="this.handleNewGraph($event)"
-    ></dm-file-input> -->
+    ></dm-file-input>
     
     <dm-random-graph-generator class="maxCut_graphGenerator"( graphGenerated)="this.handleNewGraph($event)"></dm-random-graph-generator>
 

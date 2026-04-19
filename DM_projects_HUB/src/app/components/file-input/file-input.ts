@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { partition } from 'rxjs';
 import { Graph, VisualEdge, VisualNode } from '../../models/graph-components.interface';
 
@@ -11,6 +11,8 @@ import { Graph, VisualEdge, VisualNode } from '../../models/graph-components.int
 export class FileInput {
   @Output() fileLoaded = new EventEmitter<Graph>();
 
+  isFileDragged = signal(false);
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
@@ -20,10 +22,16 @@ export class FileInput {
 
   onFileDrop(event: DragEvent) {
     event.preventDefault();
+    this.isFileDragged.set(false);
     const file = event.dataTransfer?.files[0];
     if (file) {
       this.readFile(file);
     }
+  }
+
+  onFileDraggedOver(event: DragEvent){
+    event.preventDefault();
+    this.isFileDragged.set(true);
   }
 
   private readFile(file: File) {
