@@ -7,34 +7,106 @@
 .stirlingFormula {
   height: 100%;
   background-color: colors.$dm-bg-grey;
-}
-
-.comparison-stage {
   display: flex;
-  justify-content: center;
-  align-items: flex-bottom;
-  height: 200px;
-  gap: 40px;
-  background: #1a1a1a;
-  padding: 20px;
-  border-radius: 12px;
-  position: relative;
-}
+  flex-direction: column;
 
-.bar {
-  width: 60px;
-  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 4px 4px 0 0;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  &_currentError{
+    color: white;
+    text-align: center;
+    margin: auto 0; 
+  }
   
-  &.exact { background: colors.$dm-primary; }
-  &.approx { background: colors.$dm-accent-tan; opacity: 0.8; }
+  &_visualizer{
+    height: 50%;
+  }
+
+  &_visualizerControlPanel{
+    display:flex;
+    justify-content: space-around;
+    padding: 1rem;
+
+  }
+    
+    &_visualizerComparisonStage {
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      gap: 40px;
+      background: colors.$dm-bg-dark;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      position: relative;
+      flex-grow: 0;
+
+    }
+
+    &_visualizerBar {
+      width: 60px;
+      transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 4px 4px 0 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      
+      &.exact { background: colors.$dm-primary; }
+      &.approx { background: colors.$dm-accent-tan; opacity: 0.8; }
+    }
+
+    &_visualizerBarWrapper{
+      flex-basis: 50%;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      width: 45vw;
+    
+      .label{
+        padding: 0.5rem;
+      }
+    }
+    
+    &_visualizerBarValue{
+      width: 100%;
+      height: 2rem;
+      overflow-y: auto;
+      text-align: center;
+    }
+    
+    &_table {
+      width: 100vw;
+      color: white;
+    }
+
+    &_tableWrapper{
+      width: 100%;
+      table-layout: fixed; 
+      border-collapse: collapse;
+      
+      th, td {
+        border: 1px solid #444;
+        padding: 12px;
+      }
+    
+      .n-col { width: 60px; text-align: center; }
+      .error-col { width: 120px; }
+    
+      .exact-col, .approx-col {
+        width: auto; 
+      }
+
+    }
+    
+    
+    &_scrollableValue {
+      width: 100%;
+      overflow-x: auto;
+      white-space: nowrap; 
+    }
 }
 
-.value-label {
-  transform: translateY(-25px);
-  font-size: 0.7rem;
-  font-weight: bold;
+.math-font{
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 5px 0;
 }

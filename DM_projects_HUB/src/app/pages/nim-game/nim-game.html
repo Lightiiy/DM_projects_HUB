@@ -1,11 +1,44 @@
 <div class="nimGame">
     <div class="nimGame_container">
-        <h2>Nim Game: {{ isPlayerTurn() ? 'Your Turn' : 'AI Thinking...' }}</h2>
-        
+        <div class="nimGame_gameFeedback">
+            <h2>Nim Game: {{ isPlayerTurn() ? 'Your Turn' : 'AI Thinking...' }}</h2>
+            <div class="nimGame_controls">
+                @if (!gameStarted() && !isTossing()) {
+                    <button (click)="startGame()" class="btn-primary">
+                    DETERMINE STARTING BIT
+                    </button>
+                }
+            
+                @if (isTossing()) {
+                    <div class="nimGame_tossContainer">
+                        <div class="nimGame_binaryCoin">
+                            {{ flickerBit() }}
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #888;">Calculating initial state...</p>
+                }
+            
+                @if (gameStarted() && !winner()) {
+                    <div class="nimGame_statusPanel">
+                        <span [class.active-turn]="isPlayerTurn()">PLAYER (1)</span>
+                        <span class="divider">|</span>
+                        <span [class.active-turn]="!isPlayerTurn()">COMPUTER (0)</span>
+                    </div>
+                }
+            </div>
+
+            <div class="nimGame_turnIndicator" [class.player]="isPlayerTurn()">
+                @if (winner()) {
+                    <h2 class="nimGame_winnerGlow">Winner: {{ winner() }}!</h2>
+                } @else if (gameStarted()) {
+                    <p>Current Turn: <strong>{{ isPlayerTurn() ? 'You' : 'Computer' }}</strong></p>
+                }
+            </div>
+        </div>
         <div class="nimGame_heapsLayout">
             @for (count of heaps(); track $index; let hIdx = $index) {
                 <div class="nimGame_heap">
-                    <span class="nimGame_heapLabel">Heap {{ hIdx + 1 }}</span>
+                    <div class="nimGame_heapLabel">Heap {{ hIdx + 1 }}</div>
                     <div class="nimGame_stones">
                         @for (s of [].constructor(count); track $index) {
                             <div class="nimGame_stone" (click)="makeMove(hIdx, $index + 1)"></div>
@@ -15,11 +48,12 @@
             }
         </div>
         
-        @if (winner()) {
-            <div class="nimGame_overlay">
-                <h3>🎉 {{ winner() }} Wins!</h3>
-                <button (click)="reset()">Play Again</button>
-            </div>
-        }
     </div>
 </div>
+
+@if (winner()) {
+    <div class="nimGame_overlay">
+        <h2>🎉 {{ winner() }} Wins!</h2>
+        <button (click)="reset()">Play Again</button>
+    </div>
+}

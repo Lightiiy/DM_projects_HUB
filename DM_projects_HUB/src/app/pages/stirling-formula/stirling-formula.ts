@@ -16,7 +16,8 @@ export class StirlingFormula {
 
   nValue = signal(10); 
   testPoints = [1, 2, 5, 10, 20, 50, 100, 150]; 
-
+  
+  
   exactLogHeight = computed(() => {
     const n = this.nValue();
     let logSum = 0;
@@ -31,14 +32,19 @@ export class StirlingFormula {
   });
 
   currentExactValue = computed(() => {
-    return this.calculateExact(this.nValue()).toString();
+    return this.calculateExact(this.nValue());
   });
-
+  
   currentStirlingValue = computed(() => {
     const val = this.calculateStirling(this.nValue());
-    return val.toExponential(4);
+    return val;
   });
-
+  
+  currentValueError = computed(() => {
+    const currentExact = this.currentExactValue();
+    const currentStirling = this.currentStirlingValue();
+    return (this.calculateRelativeError(currentExact,currentStirling) * 100).toFixed(6) + '%';
+  })
 
   maxLogValue = Math.log(150) * 150;
 

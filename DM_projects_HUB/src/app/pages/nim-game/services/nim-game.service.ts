@@ -7,20 +7,35 @@ export class NimGameService {
 
   heaps = signal<number[]>([3,4,5]);
   isPlayerTurn = signal<boolean>(true);
+  isTossing = signal<boolean>(false);
+  gameStarted = signal<boolean>(false);
   winner = signal<string | null>(null);
 
   nimSum = computed(() => this.heaps().reduce((acc, val) => acc ^ val, 0))
 
   constructor() {
     effect(() => {
-      if (!this.isPlayerTurn() && !this.winner())
+      if (this.gameStarted() && !this.isPlayerTurn() && !this.winner())
       {
-        setTimeout(() => 
+        setTimeout(() => {
           this.compMove()
-        , 500)
+        }
+        , 1000)
         console.log(this.isPlayerTurn(), this.winner(),!this.isPlayerTurn() && !this.winner());
       }
     })
+  }
+
+  startGame() {
+    this.isTossing.set(true);
+    this.winner.set(null);
+    
+    setTimeout(() => {
+      const playerStarts = Math.random() > 0.5;
+      this.isPlayerTurn.set(playerStarts);
+      this.isTossing.set(false);
+      this.gameStarted.set(true);
+    }, 1500);
   }
 
   handlePlayerMove(heapIndex:number, amount:number) {
@@ -35,14 +50,13 @@ export class NimGameService {
   }
 
   private makeMove(heapIndex: number, amount:number) {
-    if (this.winner() || amount < 1 || amount > this.heaps()[heapIndex]) {
+    if (this.winner() || amount < 1 || amount > this.heaps()[heapIndex] || !this.gameStarted()) {
       return;
     }
 
     const newHeaps = [...this.heaps()];
     newHeaps[heapIndex] -= amount;
     this.heaps.set(newHeaps);
-
     this.checkGameOver();
   }
 
@@ -51,34 +65,34 @@ export class NimGameService {
     const sum = this.nimSum();
 
     if (sum === 0){
-      const idx = currentHeaps.findIndex(h => h > 0);
+      const idx = currentHeaps.findIndex((h: number) => h > 0);
       this.makeMove(idx, 1);
     }
     else {
-      for(let i =0; i<currentHeaps.length; i++) {
+      for(let i = 0; i<currentHeaps.length; i++) {
         const targetSize = currentHeaps[i] ^ sum;
         if(targetSize< currentHeaps[i]) {
-          console.log('I am making this move: ', i, currentHeaps[i] - targetSize);
           this.makeMove(i, currentHeaps[i] - targetSize);
           break;
         }
       }
     }
 
-    this.isPlayerTurn.set(true);
+    if (!this.winner()) {
+      this.isPlayerTurn.set(true);
+    }
   }
 
   reset() {
-    this.heaps.set([3,4,5]);
-    this.isPlayerTurn.set(true);
+    this.heaps.set([3, 4, 5]);
     this.winner.set(null);
+    this.gameStarted.set(false); 
+    this.isTossing.set(false);
   }
 
   private checkGameOver() {
-    if (this.heaps().every(h => h === 0)) {
-      this.winner.set(this.isPlayerTurn() ? 'Human' : 'AI');
-      return true;
+    if (this.heaps().every((h: number) => h === 0)) {
+      this.winner.set(this.isPlayerTurn() ? 'Human' : 'Computer');
     }
-    return false;
   }
 }

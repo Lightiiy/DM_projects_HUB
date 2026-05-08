@@ -1,25 +1,29 @@
 <div class="stirlingFormula">
-    <div class="stirling-visualizer">
-        <div class="control-panel">
-            <label>Compare n = <strong>{{ nValue() }}</strong></label>
-            <input type="range" min="1" max="150" [value]="nValue()" (input)="updateN($event)" class="slider">
+    <div class="stirlingFormula_visualizer">
+        <div class="stirlingFormula_visualizerControlPanel">
+            <div>
+
+                <label>Compare n = <strong>{{ nValue() }}</strong></label>
+                <input type="range" min="1" max="170" [value]="nValue()" (input)="updateN($event)" class="slider">
+            </div>
+            <div class="stirlingFormula_currentError"> Relative error for given n: {{currentValueError()}}</div>
         </div>
 
-        <div class="comparison-stage">
-            <div class="bar-wrapper">
-            <div class="value-bubble exact-text">
-                {{ currentExactValue() }}
-            </div>
-            <div class="bar exact" [style.height.%]="getBarHeight(exactLogHeight())"></div>
-            <span class="label">Exact (n!)</span>
+        <div class="stirlingFormula_visualizerComparisonStage">
+            <div class="stirlingFormula_visualizerBarWrapper">
+                <div class="stirlingFormula_visualizerBarValue stirlingFormula_scrollableValue math-font" >
+                    {{ currentExactValue() }}
+                </div>
+                <div class="stirlingFormula_visualizerBar exact" [style.height.%]="getBarHeight(exactLogHeight())"></div>
+                <span class="label">Exact (n!)</span>
             </div>
 
-            <div class="bar-wrapper">
-            <div class="value-bubble approx-text">
-                {{ currentStirlingValue() }}
-            </div>
-            <div class="bar approx" [style.height.%]="getBarHeight(stirlingLogHeight())"></div>
-            <span class="label">Stirling Approx</span>
+            <div class="stirlingFormula_visualizerBarWrapper">
+                <div class="stirlingFormula_visualizerBarValue math-font">
+                    {{ currentStirlingValue().toExponential(4) }}
+                </div>
+                <div class="stirlingFormula_visualizerBar approx" [style.height.%]="getBarHeight(stirlingLogHeight())"></div>
+                <span class="label">Stirling Approx</span>
             </div>
         </div>
     </div>
@@ -29,8 +33,8 @@
         <p>Observation of how Relative Error diminishes as N grows.</p>
     </div>
 
-    <div class="table-wrapper">
-        <table class="analysis-table">
+    <div class="stirlingFormula_table">
+        <table class="stirlingFormula_tableWrapper">
         <thead>
             <tr>
             <th>n</th>
@@ -42,19 +46,21 @@
         <tbody>
             @for (row of analysisData(); track row.n) {
             <tr [class.active-row]="row.n === nValue()">
-                <td class="n-col">
+                <td class="math-font">
                 <strong>{{ row.n }}</strong>
                 </td>
                 
                 <td class="math-font exact-col" [title]="row.exact">
-                {{ row.exact }}
+                    <div class="stirlingFormula_scrollableValue">
+                        {{ row.exact }}
+                    </div>
                 </td>
                 
                 <td class="math-font approx-col">
                 {{ row.approx }}
                 </td>
                 
-                <td class="error-col" [class.high-precision]="row.n >= 50">
+                <td class="error-col math-font" [class.high-precision]="row.n >= 50">
                 {{ row.error }}
                 </td>
             </tr>
@@ -62,10 +68,5 @@
         </tbody>
         </table>
     </div>
-    
-    <!-- <div class="table-footer">
-        <p>* Using scientific notation for Approximation to maintain readability at high magnitudes.</p>
-    </div>
-    </div> -->
 
 </div>

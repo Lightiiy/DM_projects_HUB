@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { NimGameService } from './services/nim-game';
+import { Component, inject, signal } from '@angular/core';
+import { NimGameService } from './services/nim-game.service';
 
 @Component({
   selector: 'dm-nim-game',
@@ -18,8 +18,27 @@ export class NimGame {
 
   reset = this.nimGameService.reset;
 
+  gameStarted = this.nimGameService.gameStarted;
+
+  isTossing = this.nimGameService.isTossing;
+
+  flickerBit = signal<string>('0')
+
+  constructor(){
+    setInterval(() => {
+      if (this.isTossing()) {
+        this.flickerBit.set(Math.random() > 0.5 ? '1' : '0')
+      }
+    }, 100)
+  }
+
   makeMove(heapIndex: number, amount: number) {
     this.nimGameService.handlePlayerMove(heapIndex, amount);
-    console.log(this.heaps(),this.isPlayerTurn);
   }
+
+  startGame() {
+    this.nimGameService.startGame();
+  }
+
+
 }

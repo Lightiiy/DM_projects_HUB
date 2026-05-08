@@ -23,22 +23,22 @@ export class AckermannFunction {
   isRunning = signal(false);
 
   ackermannForm = this.formBuilder.group({
-    m: [0, [Validators.required, Validators.min(0), Validators.max(4)]],
-    n: [0, [Validators.required, Validators.min(0), Validators.max(10)]],
+    m: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
+    n: [0, [Validators.required, Validators.min(0), Validators.max(20)]],
   });
 
   maxM = computed(() => {
     const keys = Object.keys(this.visitCounts());
-    if (keys.length === 0) return 4;
+    if (keys.length === 0) return 2;
     const ms = keys.map(k => parseInt(k.split(',')[0]));
-    return Math.max(...ms, 4);
+    return Math.max(...ms, 2);
   });
 
   maxN = computed(() => {
     const keys = Object.keys(this.visitCounts());
-    if (keys.length === 0) return 5;
+    if (keys.length === 0) return 2;
     const ns = keys.map(k => parseInt(k.split(',')[1]));
-    return Math.max(...ns, 5);
+    return Math.max(...ns, 2);
   });
 
   getRange(size: number) {
@@ -52,12 +52,13 @@ export class AckermannFunction {
     this.steps.set(0);
     this.visitCounts.set({}); 
     this.discoveredValues.set({});
-
+    
     let currentStack: AckermannFrame[] = [{ m: startM, n: startN }];
     this.stack.set([...currentStack]);
+    
 
-    while (currentStack.length > 0) {
-      this.steps.update(s => s + 1);
+    while (currentStack.length > 0 && this.isRunning()) {
+      this.steps.update((s: number) => s + 1);
 
       const frame = currentStack.pop()!;
       const m = frame.m;
@@ -91,6 +92,10 @@ export class AckermannFunction {
       this.stack.set([...currentStack]);
       await new Promise(r => setTimeout(r, 10));
     }
+    this.isRunning.set(false);
+  }
+
+  stop() {
     this.isRunning.set(false);
   }
 

@@ -5,40 +5,103 @@
 }
 
 .ackermann {
-  height: 100%;
-  background-color: colors.$dm-bg-grey;
-}
-
-.grid {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  background: #333;
-  padding: 15px;
-  border-radius: 8px;
-}
+  height: 100%;
+  background-color: colors.$dm-bg-grey;
+  padding: 0 1rem;
 
-.grid-row {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
+  &_form{
+    height: 10%;
+    width: 100%;
+    padding-bottom: 1rem;
+  }
+  
+  &_formInputWrapper{
+    padding: 1rem;
+    display: flex;
+    justify-content:space-between;
+    gap: 1rem;
+  }
 
-.label {
-  width: 40px;
-  color: #aaa;
-  font-size: 0.8rem;
-}
+  &_formField{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    gap: 0.5rem;
+    
+    input[type=number] {
+      border: none;
+      border-radius: 4px;
+      height: 2rem;
+      font-size: 1rem;
+      padding: 0 1rem;
+    }
+  }
+    &_submitForm{
 
-.grid-cell {
-  width: 50px;
-  height: 50px;
-  color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 0.9rem;
-  transition: background-color 0.3s ease;
+        border: none;
+        border-radius: 4px;
+    }
+
+
+    &_visualizationSpace{
+      height: 45vh;
+      max-height: 60%;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 0;
+    }
+
+    &_stepList {
+      height: 100%;
+      overflow-y: scroll;
+      padding: 1rem;
+      margin: 1rem 0;
+
+      h2 {
+        color: white;
+      }
+    }
+
+    &_searchSuccess {
+      background-color: colors.$dm-primary;
+      padding:1rem;
+    }
+
+    &_heatmapContainer{
+      max-width: 100vw;
+      overflow-x: scroll;
+      background-color: colors.$dm-bg-dark;
+      padding: 1rem;
+      border-radius: 4px
+    }
+
+    &_gridWrapper {
+      display: grid;
+      gap: 0.25rem;
+      width: max-content;
+    }
+
+    &_headerCell {
+      background: colors.$dm-bg-grey;
+      color: white;
+      font-size: 0.5rem;
+      padding: 0.25rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    &_label {
+      background-color: colors.$dm-bg-grey;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 2px solid colors.$dm-accent-soft;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
 }

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NimGame } from './nim-game';
+import { NimGame } from './nim-game.service';
 
 describe('NimGame', () => {
   let service: NimGame;

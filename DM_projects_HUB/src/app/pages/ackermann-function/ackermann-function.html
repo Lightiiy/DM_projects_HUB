@@ -1,59 +1,58 @@
 <div class="ackermann">
-    <form [formGroup]="ackermannForm" (ngSubmit)="start()" class="ackermann-box">
-    <div class="field">
-        <label>Parameter M (Recursion Depth):</label>
-        <input type="number" formControlName="m">
-        @if (ackermannForm.controls.m.errors?.['max']) {
-        <small class="error">Careful! M > 3 grows too fast for this browser.</small>
-        }
-    </div>
+    <form [formGroup]="ackermannForm" (ngSubmit)="this.isRunning() ? stop(): start()" class="ackermann_form">
+        <div class="ackermann_formInputWrapper">
 
-    <div class="field">
-        <label>Parameter N (Sequence Offset):</label>
-        <input type="number" formControlName="n">
-    </div>
+            <div class="ackermann_formField">
+                <label>Parameter M (Recursion Depth):</label>
+                <input type="number" formControlName="m" min="0", max="4">
 
-    <button type="submit" [disabled]="ackermannForm.invalid || isRunning()">
-        {{ isRunning() ? 'Computing...' : 'Calculate A(m, n)' }}
-    </button>
+            </div>
+            
+            <div class="ackermann_formField">
+            <label>Parameter N (Sequence Offset):</label>
+            <input type="number" formControlName="n" min="0" max="20">
+        </div>
+        
+        <button type="submit" class="ackermann_submitForm" >
+            {{ isRunning() ? 'Stop Calculations' : 'Calculate A(m, n)' }}
+        </button>
+    </div>
     </form>
 
-    <div class="visualization-space">
-        
-        <div class="heatmap-container">
-            <h3>Discovery Map</h3>
-            <div class="dynamic-grid">
-                <div class="grid-row header-row">
-                <div class="m-label spacer"></div>
-                @for (n of getRange(maxN()); track n) {
-                    <div class="n-label">N={{n}}</div>
-                }
-                </div>
+    <div class="ackermann_visualizationSpace">
+        <div class="ackermann_stepList">
 
+            
+            <h2>Steps: {{ steps() }}</h2>
+            
+            <div class="stack-visualizer">
+                @for (frame of stack(); track $index) {
+                    <div class="frame">A({{ frame.m }}, {{ frame.n }})</div>
+                }
+            </div>
+            
+            @if (result() !== null) {
+                <h2 class="ackermann_searchSuccess">Final Result: {{ result() }}</h2>
+            }
+        </div>
+    </div>
+    <div class="ackermann_heatmapContainer">
+        <h3>Discovery Map</h3>
+            <div class="ackermann_gridWrapper" [style.grid-template-columns]="'80px repeat('+ (maxN() + 1) + ', 60px)'">
+                <div class="ackermann_headerCell"></div>
+                @for (n of getRange(maxN()); track n) {
+                    <div class="ackermann_label ackermann_headerCell">N={{n}}</div>
+                }
+                
                 @for (rowM of getRange(maxM()); track rowM) {
-                <div class="grid-row">
-                    <div class="m-label">M={{rowM}}</div>
+                    <div class="ackermann_label ackermann_headerCell">M={{rowM}}</div>
                     @for (colN of getRange(maxN()); track colN) {
-                    <div class="grid-cell" 
+                        <div class="grid-cell" 
                         [style.background-color]="getVisitColor(rowM, colN)">
                         {{ discoveredValues()[rowM + ',' + colN] || '?' }}
                     </div>
                     }
-                </div>
                 }
             </div>
-        </div>
-        
-        <p>Steps: {{ steps() }}</p>
-        
-        <div class="stack-visualizer">
-            @for (frame of stack(); track $index) {
-            <div class="frame">A({{ frame.m }}, {{ frame.n }})</div>
-            }
-        </div>
-
-        @if (result() !== null) {
-            <h2>Final Result: {{ result() }}</h2>
-        }
-        </div>
-</div>   
+        </div>   
+    </div>   
