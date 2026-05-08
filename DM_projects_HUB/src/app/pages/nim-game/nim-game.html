@@ -1,0 +1,25 @@
+<div class="nimGame">
+    <div class="nimGame_container">
+        <h2>Nim Game: {{ isPlayerTurn() ? 'Your Turn' : 'AI Thinking...' }}</h2>
+        
+        <div class="nimGame_heapsLayout">
+            @for (count of heaps(); track $index; let hIdx = $index) {
+                <div class="nimGame_heap">
+                    <span class="nimGame_heapLabel">Heap {{ hIdx + 1 }}</span>
+                    <div class="nimGame_stones">
+                        @for (s of [].constructor(count); track $index) {
+                            <div class="nimGame_stone" (click)="makeMove(hIdx, $index + 1)"></div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        
+        @if (winner()) {
+            <div class="nimGame_overlay">
+                <h3>🎉 {{ winner() }} Wins!</h3>
+                <button (click)="reset()">Play Again</button>
+            </div>
+        }
+    </div>
+</div>

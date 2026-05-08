@@ -1,0 +1,59 @@
+<div class="ackermann">
+    <form [formGroup]="ackermannForm" (ngSubmit)="start()" class="ackermann-box">
+    <div class="field">
+        <label>Parameter M (Recursion Depth):</label>
+        <input type="number" formControlName="m">
+        @if (ackermannForm.controls.m.errors?.['max']) {
+        <small class="error">Careful! M > 3 grows too fast for this browser.</small>
+        }
+    </div>
+
+    <div class="field">
+        <label>Parameter N (Sequence Offset):</label>
+        <input type="number" formControlName="n">
+    </div>
+
+    <button type="submit" [disabled]="ackermannForm.invalid || isRunning()">
+        {{ isRunning() ? 'Computing...' : 'Calculate A(m, n)' }}
+    </button>
+    </form>
+
+    <div class="visualization-space">
+        
+        <div class="heatmap-container">
+            <h3>Discovery Map</h3>
+            <div class="dynamic-grid">
+                <div class="grid-row header-row">
+                <div class="m-label spacer"></div>
+                @for (n of getRange(maxN()); track n) {
+                    <div class="n-label">N={{n}}</div>
+                }
+                </div>
+
+                @for (rowM of getRange(maxM()); track rowM) {
+                <div class="grid-row">
+                    <div class="m-label">M={{rowM}}</div>
+                    @for (colN of getRange(maxN()); track colN) {
+                    <div class="grid-cell" 
+                        [style.background-color]="getVisitColor(rowM, colN)">
+                        {{ discoveredValues()[rowM + ',' + colN] || '?' }}
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        
+        <p>Steps: {{ steps() }}</p>
+        
+        <div class="stack-visualizer">
+            @for (frame of stack(); track $index) {
+            <div class="frame">A({{ frame.m }}, {{ frame.n }})</div>
+            }
+        </div>
+
+        @if (result() !== null) {
+            <h2>Final Result: {{ result() }}</h2>
+        }
+        </div>
+</div>   

@@ -1,0 +1,40 @@
+@use "../../variables/styles/variables" as colors;
+:host{
+  height: 100%;
+  width: 100%;
+}
+
+.stirlingFormula {
+  height: 100%;
+  background-color: colors.$dm-bg-grey;
+}
+
+.comparison-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-bottom;
+  height: 200px;
+  gap: 40px;
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.bar {
+  width: 60px;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  
+  &.exact { background: colors.$dm-primary; }
+  &.approx { background: colors.$dm-accent-tan; opacity: 0.8; }
+}
+
+.value-label {
+  transform: translateY(-25px);
+  font-size: 0.7rem;
+  font-weight: bold;
+}

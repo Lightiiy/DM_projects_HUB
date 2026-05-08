@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, NgZone, OnInit, Output, signal } from '@angular/core';
 import { partition } from 'rxjs';
 import { Graph, VisualEdge, VisualNode } from '../../models/graph-components.interface';
+import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'dm-file-input',
@@ -8,10 +9,18 @@ import { Graph, VisualEdge, VisualNode } from '../../models/graph-components.int
   templateUrl: './file-input.html',
   styleUrl: './file-input.scss',
 })
-export class FileInput {
+export class FileInput implements OnInit{
   @Output() fileLoaded = new EventEmitter<Graph>();
 
   isFileDragged = signal(false);
+  
+  private ngZone = inject(NgZone);
+
+  @HostListener('window:drop', ['$event'])
+  onWindowDrop(event:DragEvent)
+  {
+    event.preventDefault();
+  }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -32,6 +41,12 @@ export class FileInput {
   onFileDraggedOver(event: DragEvent){
     event.preventDefault();
     this.isFileDragged.set(true);
+  }
+
+  ngOnInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+
+    })
   }
 
   private readFile(file: File) {

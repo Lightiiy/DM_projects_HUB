@@ -1,0 +1,23 @@
+@use "../../variables/styles/variables" as colors;
+:host{
+  height: 100%;
+  width: 100%;
+}
+
+.nimGame {
+  height: 100%;
+  background-color: colors.$dm-bg-grey;
+
+    &_stones {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: red;
+    }
+
+    &_stone {
+        width: 25px;
+        height: 25px;
+        background-color: blue;
+    }
+}

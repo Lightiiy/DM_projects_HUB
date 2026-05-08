@@ -1,10 +1,14 @@
+@use './../../variables/styles/variables' as colors;
+
 .fileInput {
   height: 100%;
 
   &_invisibleCover{
     position: absolute;
-    width: 100px;
-    height: 100px;
-    background-color: green;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: scale(colors.$dm-bg-grey, 0.5);
   }
 }

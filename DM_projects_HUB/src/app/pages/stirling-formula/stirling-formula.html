@@ -1,0 +1,71 @@
+<div class="stirlingFormula">
+    <div class="stirling-visualizer">
+        <div class="control-panel">
+            <label>Compare n = <strong>{{ nValue() }}</strong></label>
+            <input type="range" min="1" max="150" [value]="nValue()" (input)="updateN($event)" class="slider">
+        </div>
+
+        <div class="comparison-stage">
+            <div class="bar-wrapper">
+            <div class="value-bubble exact-text">
+                {{ currentExactValue() }}
+            </div>
+            <div class="bar exact" [style.height.%]="getBarHeight(exactLogHeight())"></div>
+            <span class="label">Exact (n!)</span>
+            </div>
+
+            <div class="bar-wrapper">
+            <div class="value-bubble approx-text">
+                {{ currentStirlingValue() }}
+            </div>
+            <div class="bar approx" [style.height.%]="getBarHeight(stirlingLogHeight())"></div>
+            <span class="label">Stirling Approx</span>
+            </div>
+        </div>
+    </div>
+    <div class="table-section">
+    <div class="table-header">
+        <h3>Trend Analysis</h3>
+        <p>Observation of how Relative Error diminishes as N grows.</p>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="analysis-table">
+        <thead>
+            <tr>
+            <th>n</th>
+            <th>Exact Value (BigInt)</th>
+            <th>Stirling Approximation</th>
+            <th>Relative Error</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (row of analysisData(); track row.n) {
+            <tr [class.active-row]="row.n === nValue()">
+                <td class="n-col">
+                <strong>{{ row.n }}</strong>
+                </td>
+                
+                <td class="math-font exact-col" [title]="row.exact">
+                {{ row.exact }}
+                </td>
+                
+                <td class="math-font approx-col">
+                {{ row.approx }}
+                </td>
+                
+                <td class="error-col" [class.high-precision]="row.n >= 50">
+                {{ row.error }}
+                </td>
+            </tr>
+            }
+        </tbody>
+        </table>
+    </div>
+    
+    <!-- <div class="table-footer">
+        <p>* Using scientific notation for Approximation to maintain readability at high magnitudes.</p>
+    </div>
+    </div> -->
+
+</div>

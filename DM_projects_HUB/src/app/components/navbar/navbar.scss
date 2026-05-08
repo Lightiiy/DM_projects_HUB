@@ -1,8 +1,10 @@
 @use '../../variables/styles/variables' as colors;
 
 .navbar {
+  z-index: 2;
   background-color: colors.$dm-primary;
   display: flex;
+  align-items: center;
   height: 4rem;
   padding: 1rem 0.5rem;
 
@@ -28,4 +30,55 @@
     aspect-ratio: 1/1;
     object-fit: contain;
   }
+
+  &_list{
+    z-index: 10;
+    padding: 1rem 0 0 1rem;
+    position: absolute;
+    top: 6rem;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: colors.$dm-primary;
+
+  }
+
+  &_link {
+
+    height: 2rem;
+
+    & a{
+      text-decoration: none;
+      color: colors.$dm-accent-tan;
+      font-weight: bold;
+
+      &:hover {
+        color: colors.$dm-accent-soft;
+      }
+
+      &.path-active {
+        color: white;
+      }
+    }
+  }
+
+  &_listToggle {
+    margin-left: auto;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    color: white;
+    font-size: 4rem;
+    height: 5rem;
+    width: 5rem;
+
+    &:hover{
+      color: colors.$dm-bg-grey
+    }
+  }
+
+  
 }

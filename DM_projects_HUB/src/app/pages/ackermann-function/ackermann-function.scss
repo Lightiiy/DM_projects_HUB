@@ -1,0 +1,44 @@
+@use "../../variables/styles/variables" as colors;
+:host{
+  height: 100%;
+  width: 100%;
+}
+
+.ackermann {
+  height: 100%;
+  background-color: colors.$dm-bg-grey;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #333;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.grid-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.label {
+  width: 40px;
+  color: #aaa;
+  font-size: 0.8rem;
+}
+
+.grid-cell {
+  width: 50px;
+  height: 50px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}

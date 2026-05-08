@@ -3,4 +3,14 @@
     <img src="assets/logo.png" alt="logo" class="navbar_logo" />
   </div>
   <h1 class="navbar_title">Discrete Mathematics</h1>
+  <button class="navbar_listToggle" (click)="toggleNavList()"> {{ toggleNav() ? '⋯' : ' ⁝' }} </button>
 </div>
+  @if(toggleNav()) {
+      <div class="navbar_list">
+      @for (links of navLinks; track links.label) {
+        <div class="navbar_link"> 
+          <a  [routerLink]="links.path" routerLinkActive="path-active" [routerLinkActiveOptions]="{ exact: true }">{{links.label}}</a>
+        </div>
+      }
+    </div>
+    }
